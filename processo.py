@@ -1,12 +1,9 @@
 import time
 
 
-exec_delay = 10 # millisecond
+exec_delay = 20 # millisecond
 
-def delayer(ed, mode):
-    if mode == 1:
-        time.sleep(ed / 1000.0)
-        return
+def delayer(ed):
     time.sleep(ed / 1000.0)
     print(f"executed after {ed} ms")
     
@@ -18,6 +15,7 @@ class Processo:
         self.prioridade = prioridade
         self.tempoDeCpu = instRestantes * exec_delay
         self.instRestantes = instRestantes
+        self.GanntInt = []
     
     def exec(self):
         print("Executando processo ", self.nome, "Prioridade", self.prioridade)
@@ -36,6 +34,11 @@ class Processo:
     def getTime(self):
         return self.instRestantes * exec_delay
     
+    def getReady(self):
+        if self.status == "PRONTO":
+            return True
+        return False
+    
     def setStatus(self, v):
         if v == 0:
             self.status = "PRONTO"
@@ -50,19 +53,29 @@ class Processo:
             
         return 
     
-    def exec_rr(self, q):
+    def exec_rr(self, q, startTime):
         print("Executando processo ", self.nome)
 
         if self.tempoDeCpu <= 0: # Processo terminou
-            self.setStatus(3)
-            return
+            self.setStatus(3) # terminado
+           #adicionar overhead
+            return 
+
         if self.tempoDeCpu > 0: 
             self.tempoDeCpu -= q
-            delayer(q, 1) # executa por q ms
-            self.setStatus(0)
-            return
+            self.instRestantes -= (1 * q / exec_delay)
+            delayer(q) # executa por q ms
+            if self.tempoDeCpu <= 0: # Processo terminou
+                self.setStatus(3) # terminado
+                self.GanntInt.append((startTime, q))
+                return self.GanntInt # retorna lista de tuplas
+            else:
+                self.setStatus(0) # pronto
+
+            self.GanntInt.append((startTime, q))
+            return False
+        
+    
             
 
-
-        print("Executado!")
-        return
+        

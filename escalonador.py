@@ -36,33 +36,46 @@ def EscalonadorPrioridade (task_vector):
     return
 
 def EscalonadorRR (task_vector):
-    v_t_start = []
-    v_t_end = []
     quantum = 20 # ms
+    startTime = 0
     toExec = True
+    Terminados = []
+    
+    i = 0
+    j = 0
+
     for t in task_vector:
         print(t.tempoDeCpu)
+    
+
     toExecVct = toExecFilter(task_vector)
-
-
+      # lista de lista de tuples
+    index = toExecVct.__len__() 
+    #InterGannts = []
+    InterGannts = [[] for _ in range(index)]
     while toExec:
-        i = 0
         for task in toExecVct:
-            task.exec_rr(quantum)
-            v_n.append(task.__str__())
-            v_t.append(task.getTime())
-            
-        toExecVct = toExecFilter(task_vector)
-        
-        if toExecVct.__len__() == 0:
-            toExec = False 
-        i += 1
+            if task.getReady():
+                i %= index # diz qual processo esta sendo trabalhado
+                aux = task.exec_rr(quantum, startTime) # retorna uma lista de tuplas ou falso
+                if task.__str__() not in v_n:
+                    v_n.append(task.__str__())
+                startTime += quantum
+                #toExecVct = toExecFilter(toExecVct)
+                if aux != False:
+                    InterGannts[i].append(aux)
+            i += 1
 
-    RRGrafico(v_t_start,v_t_end, v_n)
+        if EndChecker(toExecVct):
+            toExec = False
+        
+
+    RRGrafico(v_n, InterGannts, 350)
 
    
 
     return
+
 
 
 
@@ -84,4 +97,16 @@ def toExecFilter(V):
         if task.status == "PRONTO":
             Vector.append(task)
     return Vector
-            
+
+def toTermFilter(V): 
+    Vector = []
+    for task in V:
+        if task.status == "TERMINADO":
+            Vector.append(task)
+    return Vector
+
+def EndChecker(V): 
+    for task in V:
+        if task.status == "PRONTO":
+            return False
+    return True

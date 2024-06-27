@@ -7,8 +7,8 @@ def TaskGen(n):
 
     for x in range(n):
         nome = f"P{x}"
-        inst = random.randint(1, 7)
-        prio = random.randint(1, 10)
+        inst = random.randint(1, 2)
+        prio = random.randint(1, 4)
         p = Processo(nome, prio, inst)
         tasks.append(p)
 

@@ -11,40 +11,42 @@ def Grafico(vetor_tempo, vetor_nomes, tt):
 
     return
 
-def RRGrafico(): # https://www.geeksforgeeks.org/python-basic-gantt-chart-using-matplotlib/
+def RRGrafico(v_n, gannt, maxTime): # https://www.geeksforgeeks.org/python-basic-gantt-chart-using-matplotlib/
     
     # Declaring a figure "gnt"
     fig, gnt = pp.subplots()
     
     # Setting Y-axis limits
-    gnt.set_ylim(0, 50)
+    gnt.set_ylim(0, gannt.__len__() * 15)
     
     # Setting X-axis limits
-    gnt.set_xlim(0, 160)
+    gnt.set_xlim(0, maxTime + 20)
     
     # Setting labels for x-axis and y-axis
-    gnt.set_xlabel('seconds since start')
-    gnt.set_ylabel('Processor')
+    gnt.set_xlabel('tempo')
+    gnt.set_ylabel('processos')
     
     # Setting ticks on y-axis
-    gnt.set_yticks([15, 25, 35])
+    x = v_n.__len__()
+    tickList = []
+    for y in range(x):
+        tickList.append((15 + (10 * y)))
+
+
+    gnt.set_yticks(tickList)
     # Labelling tickes of y-axis
-    gnt.set_yticklabels(['1', '2', '3'])
+    gnt.set_yticklabels(v_n)
     
     # Setting graph attribute
     gnt.grid(True)
     
     # Declaring a bar in schedule
-    gnt.broken_barh([(40, 50)], (30, 9), facecolors =('tab:orange'))
-    
-    # Declaring multiple bars in at same level and same width
-    gnt.broken_barh([(110, 10), (150, 10)], (10, 9),
-                            facecolors ='tab:blue')
-    
-    gnt.broken_barh([(10, 50), (100, 20), (130, 10)], (20, 9),
-                                    facecolors =('tab:red'))  
+    #[(startsAt, EndAtPlus)] (posx lenghty)
+
+    for y in range(x):
+        if y < len(gannt):
+            gnt.broken_barh(gannt[y][0], (10 * (y + 1), 9), facecolors =('tab:orange'))            
    
     pp.show()
 
 
-RRGrafico()
