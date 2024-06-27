@@ -17,7 +17,7 @@ def RRGrafico(v_n, gannt, maxTime): # https://www.geeksforgeeks.org/python-basic
     fig, gnt = pp.subplots()
     
     # Setting Y-axis limits
-    gnt.set_ylim(0, gannt.__len__() * 15)
+    gnt.set_ylim(0, gannt.__len__() * 10)
     
     # Setting X-axis limits
     gnt.set_xlim(0, maxTime + 20)
@@ -46,7 +46,7 @@ def RRGrafico(v_n, gannt, maxTime): # https://www.geeksforgeeks.org/python-basic
     for y in range(x):
         if y < len(gannt):
             gnt.broken_barh(gannt[y][0], (10 * (y + 1), 9), facecolors =('tab:orange'))            
-   
+    #pp.savefig('gantt.jpg')
+    pp.savefig('gantt.png')
     pp.show()
-
 

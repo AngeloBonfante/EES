@@ -3,15 +3,15 @@ from escalonador import EscalonadorFCFS, EscalonadorSJF, EscalonadorPrioridade, 
 from taskgen import TaskGen
 
 
-task_vector = TaskGen(0)
+task_vector = TaskGen(10)
 #task_vector = []
 
-p1 = Processo("p1", 0, 2)
-p2 = Processo("p2", 0, 15)
-p3= Processo("p3", 0, 5)
-task_vector.append(p1)
-task_vector.append(p2)
-task_vector.append(p3)
+pX = Processo("A", 0, 10)
+pY = Processo("B", 0, 15)
+pZ= Processo("C", 0, 5)
+task_vector.append(pX)
+task_vector.append(pY)
+task_vector.append(pZ)
 
 #EscalonadorFCFS(task_vector)
 #EscalonadorSJF(task_vector)

@@ -39,20 +39,22 @@ def EscalonadorRR (task_vector):
     quantum = 20 # ms
     startTime = 0
     toExec = True
-    Terminados = []
+    maxTime = 0
     
     i = 0
-    j = 0
+    
 
     for t in task_vector:
         print(t.tempoDeCpu)
     
 
     toExecVct = toExecFilter(task_vector)
-      # lista de lista de tuples
+    for task in toExecVct:
+        maxTime += task.tempoDeCpu
+
     index = toExecVct.__len__() 
     #InterGannts = []
-    InterGannts = [[] for _ in range(index)]
+    InterGannts = [[] for _ in range(index)] # lista de lista de tuples
     while toExec:
         for task in toExecVct:
             if task.getReady():
@@ -61,7 +63,6 @@ def EscalonadorRR (task_vector):
                 if task.__str__() not in v_n:
                     v_n.append(task.__str__())
                 startTime += quantum
-                #toExecVct = toExecFilter(toExecVct)
                 if aux != False:
                     InterGannts[i].append(aux)
             i += 1
@@ -70,7 +71,7 @@ def EscalonadorRR (task_vector):
             toExec = False
         
 
-    RRGrafico(v_n, InterGannts, 350)
+    RRGrafico(v_n, InterGannts, maxTime)
 
    
 
