@@ -1,4 +1,4 @@
-from plotter import Grafico, RRGrafico, pp
+from plotter import Grafico, RRGrafico, GraficoGannt
 
 #v_n = [] # VETOR NOME E TEMPO
 #v_t = [] 
@@ -8,47 +8,91 @@ troca_de_contexto = 1 # ms
 
 
 def EscalonadorFCFS (task_vector): #FCFS
+    
+    startTime = 0
+    id = task_vector.__len__()
+    i = 0
+    gannt =  [[] for _ in range(id)]
+    maxtime = 0
+
     ready_vector = task_vector[:]
     v_n = [] 
     v_t = [] 
     for task in ready_vector:
-        task.exec()
+        task.reset_Gannt()
+        aux = task.exec(startTime)
         v_n.append(task.__str__())
         v_t.append(task.getTime())
+        startTime += task.getTime()
+        gannt[i].append(aux)
+        maxtime += task.getTime()
+        i += 1
 
-    Grafico(v_t, v_n, "FCFS")
+
+    #Grafico(v_t, v_n, "FCFS")
+    GraficoGannt(v_n, gannt, maxtime)
     return
 
 def EscalonadorSJF (task_vector): #SJF
+
+    startTime = 0
+    id = task_vector.__len__()
+    i = 0
+    gannt2 =  [[] for _ in range(id)]
+    maxtime = 0
+
     ready_vector = task_vector[:]
     v_n = [] 
     v_t = []
     sorted_vector = Sorter(ready_vector, 0)
     for task in sorted_vector:
-        task.exec()
+        task.reset_Gannt()
+        aux = task.exec(startTime)
         v_n.append(task.__str__())
         v_t.append(task.getTime())
+        startTime += task.getTime()
+        gannt2[i].append(aux)
+        maxtime += task.getTime()
+        i += 1
 
-    Grafico(v_t,v_n,"SJF")
+    #Grafico(v_t,v_n,"SJF")
+    GraficoGannt(v_n, gannt2, maxtime)
+    
     return
 
 
 def EscalonadorPrioridade (task_vector):
+    startTime = 0
+    id = task_vector.__len__()
+    i = 0
+    gannt2 =  [[] for _ in range(id)]
+    maxtime = 0
+
+
     ready_vector = task_vector[:]
     v_n = [] 
     v_t = []
     sorted_vector = Sorter(ready_vector, 1)
     for task in sorted_vector:
-        task.exec()
+        task.reset_Gannt()
+        aux = task.exec(startTime)
         v_n.append(task.__str__())
         v_t.append(task.getTime())
-    Grafico(v_t,v_n,"PRIORIDADE")
+        startTime += task.getTime()
+        gannt2[i].append(aux)
+        maxtime += task.getTime()
+        i += 1
+
+
+    #Grafico(v_t,v_n,"PRIORIDADE")
+    GraficoGannt(v_n, gannt2, maxtime)
+
     return
 
-def EscalonadorRR (task_vector):
+def EscalonadorRR (task_vector, quantum):
     ready_vector = task_vector.copy()
     v_n = [] 
-    quantum = 20 # ms
+    quantum = quantum
     startTime = 0
     toExec = True
     maxTime = 0
@@ -64,6 +108,7 @@ def EscalonadorRR (task_vector):
     toExecVct = toExecFilter(ready_vector)
     for task in toExecVct:
         maxTime += task.tempoDeCpu
+        task.reset_Gannt()
 
     index = toExecVct.__len__() 
     #InterGannts = []

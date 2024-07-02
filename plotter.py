@@ -18,6 +18,36 @@ def Grafico(vetor_tempo, vetor_nomes, tt):
     
     return
 
+def GraficoGannt(v_n, gannt, maxTime):
+
+
+   
+
+    fig, gnt = pp.subplots()
+    gnt.set_ylim(0, (gannt.__len__() * 10) + 15)
+    gnt.set_xlim(0, maxTime + 20)
+    gnt.xaxis.set_units("ms")
+    gnt.set_xlabel('tempo')
+    gnt.set_ylabel('processos')
+    x = v_n.__len__()
+    tickList = []
+    for y in range(x):
+        tickList.append((15 + (10 * y)))
+    gnt.set_yticks(tickList)
+    gnt.set_yticklabels(v_n)
+    gnt.grid(True)
+
+    colors = np.random.rand(x, 3)
+    
+    for y in range(x):
+        if y < len(gannt):
+            gnt.broken_barh(gannt[y][0], (10 * (y + 1), 10), facecolors =colors[y])            
+   
+    pp.show()
+    pp.clf()
+    pp.close()
+    return
+
 def RRGrafico(v_n, gannt, maxTime): # https://www.geeksforgeeks.org/python-basic-gantt-chart-using-matplotlib/
    
     # Declaring a figure "gnt"
@@ -50,10 +80,10 @@ def RRGrafico(v_n, gannt, maxTime): # https://www.geeksforgeeks.org/python-basic
     
     # Declaring a bar in schedule
     #[(startsAt, EndAtPlus)] (posx lenghty)
-
+    colors = np.random.rand(x, 3)
     for y in range(x):
         if y < len(gannt):
-            gnt.broken_barh(gannt[y][0], (10 * (y + 1), 10), facecolors =('tab:orange'))            
+            gnt.broken_barh(gannt[y][0], (10 * (y + 1), 10), facecolors =colors[y])            
     #pp.savefig('gantt.jpg')
     pp.savefig('gantt.png')
     print("Show(rr)")
@@ -62,11 +92,9 @@ def RRGrafico(v_n, gannt, maxTime): # https://www.geeksforgeeks.org/python-basic
 
 def r():
     
-    Grafico([10, 20, 30, 40], ["P1", "P2", "P3", "P4"], "FCFS")
-    pp.show()
-    time.sleep(2)
-    RRGrafico(["P1", "P2", "P3", "P4"], [[[(0, 10)], [(10, 20)], [(20, 30)], [(30, 40)]]], 40)
+    GraficoGannt(["a", "b"], [ [ [(0, 20)] ],[ [(20,40)] ] ], 90)
     return
+
 
 
     

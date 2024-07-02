@@ -18,12 +18,13 @@ class Processo:
         self.instRestantes = instRestantes
         self.GanntInt = []
     
-    def exec(self):
+    def exec(self, startTime):
         print("Executando processo ", self.nome, "Prioridade", self.prioridade)
         delayer(exec_delay * self.instRestantes)
         print("Executado!")
         #self.setStatus(3)
-        return
+        self.GanntInt.append((startTime, exec_delay * self.instRestantes))
+        return self.GanntInt
     
     def stop(self):
         print("Parando processo ", self.nome)
@@ -78,6 +79,11 @@ class Processo:
 
             self.GanntInt.append(((startTime + ctx_switch), q))
             return False
+        
+
+    def reset_Gannt(self):
+        self.GanntInt = []
+        return
         
     
             
