@@ -1,13 +1,17 @@
-from plotter import Grafico, RRGrafico
+from plotter import Grafico, RRGrafico, pp
 
-v_n = [] # VETOR NOME E TEMPO
-v_t = [] 
+#v_n = [] # VETOR NOME E TEMPO
+#v_t = [] 
+
+troca_de_contexto = 1 # ms
 
 
 
 def EscalonadorFCFS (task_vector): #FCFS
-    
-    for task in task_vector:
+    ready_vector = task_vector[:]
+    v_n = [] 
+    v_t = [] 
+    for task in ready_vector:
         task.exec()
         v_n.append(task.__str__())
         v_t.append(task.getTime())
@@ -16,7 +20,10 @@ def EscalonadorFCFS (task_vector): #FCFS
     return
 
 def EscalonadorSJF (task_vector): #SJF
-    sorted_vector = Sorter(task_vector, 0)
+    ready_vector = task_vector[:]
+    v_n = [] 
+    v_t = []
+    sorted_vector = Sorter(ready_vector, 0)
     for task in sorted_vector:
         task.exec()
         v_n.append(task.__str__())
@@ -27,7 +34,10 @@ def EscalonadorSJF (task_vector): #SJF
 
 
 def EscalonadorPrioridade (task_vector):
-    sorted_vector = Sorter(task_vector, 1)
+    ready_vector = task_vector[:]
+    v_n = [] 
+    v_t = []
+    sorted_vector = Sorter(ready_vector, 1)
     for task in sorted_vector:
         task.exec()
         v_n.append(task.__str__())
@@ -36,19 +46,22 @@ def EscalonadorPrioridade (task_vector):
     return
 
 def EscalonadorRR (task_vector):
+    ready_vector = task_vector.copy()
+    v_n = [] 
     quantum = 20 # ms
     startTime = 0
     toExec = True
     maxTime = 0
+    run = 0
     
     i = 0
     
 
-    for t in task_vector:
+    for t in ready_vector:
         print(t.tempoDeCpu)
     
 
-    toExecVct = toExecFilter(task_vector)
+    toExecVct = toExecFilter(ready_vector)
     for task in toExecVct:
         maxTime += task.tempoDeCpu
 
@@ -59,18 +72,20 @@ def EscalonadorRR (task_vector):
         for task in toExecVct:
             if task.getReady():
                 i %= index # diz qual processo esta sendo trabalhado
-                aux = task.exec_rr(quantum, startTime) # retorna uma lista de tuplas ou falso
+                aux = task.exec_rr(quantum, startTime, run) # retorna uma lista de tuplas ou falso
+                run += 1
                 if task.__str__() not in v_n:
                     v_n.append(task.__str__())
                 startTime += quantum
                 if aux != False:
                     InterGannts[i].append(aux)
+                    
             i += 1
 
         if EndChecker(toExecVct):
             toExec = False
         
-
+    print("RRG STARTED")
     RRGrafico(v_n, InterGannts, maxTime)
 
    

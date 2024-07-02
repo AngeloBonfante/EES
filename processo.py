@@ -3,6 +3,7 @@ import time
 
 exec_delay = 20 # millisecond
 
+
 def delayer(ed):
     time.sleep(ed / 1000.0)
     print(f"executed after {ed} ms")
@@ -21,7 +22,7 @@ class Processo:
         print("Executando processo ", self.nome, "Prioridade", self.prioridade)
         delayer(exec_delay * self.instRestantes)
         print("Executado!")
-        self.setStatus(3)
+        #self.setStatus(3)
         return
     
     def stop(self):
@@ -53,8 +54,11 @@ class Processo:
             
         return 
     
-    def exec_rr(self, q, startTime):
+    def exec_rr(self, q, startTime, run):
         print("Executando processo ", self.nome)
+        ctx_switch = 0
+        ctx_switch = ctx_switch + run
+        
 
         if self.tempoDeCpu <= 0: # Processo terminou
             self.setStatus(3) # terminado
@@ -67,12 +71,12 @@ class Processo:
             delayer(q) # executa por q ms
             if self.tempoDeCpu <= 0: # Processo terminou
                 self.setStatus(3) # terminado
-                self.GanntInt.append((startTime, q))
+                self.GanntInt.append(((startTime + ctx_switch), q))
                 return self.GanntInt # retorna lista de tuplas
             else:
                 self.setStatus(0) # pronto
 
-            self.GanntInt.append((startTime, q))
+            self.GanntInt.append(((startTime + ctx_switch), q))
             return False
         
     
