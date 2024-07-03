@@ -17,6 +17,9 @@ class Processo:
         self.tempoDeCpu = instRestantes * exec_delay
         self.instRestantes = instRestantes
         self.GanntInt = []
+        self.arrivalTime = 0
+        self.finishTime = 0
+        self.start = False
     
     def exec(self, startTime):
         print("Executando processo ", self.nome, "Prioridade", self.prioridade)
@@ -55,10 +58,18 @@ class Processo:
             
         return 
     
-    def exec_rr(self, q, startTime, run):
+    def exec_rr(self, quantum, startTime, run, dyq):
         print("Executando processo ", self.nome)
+
+        q = quantum
+        
         ctx_switch = 0
         ctx_switch = ctx_switch + run
+        if self.start == False:
+            self.start = True
+            self.arrivalTime = startTime + ctx_switch
+
+        
         
 
         if self.tempoDeCpu <= 0: # Processo terminou
@@ -66,12 +77,18 @@ class Processo:
            #adicionar overhead
             return 
 
-        if self.tempoDeCpu > 0: 
+        if self.tempoDeCpu > 0:
+
+            if dyq == True and self.tempoDeCpu <= q:
+                q = self.tempoDeCpu
+
+
             self.tempoDeCpu -= q
-            self.instRestantes -= (1 * q / exec_delay)
+            self.instRestantes -= int(q / exec_delay)
             delayer(q) # executa por q ms
             if self.tempoDeCpu <= 0: # Processo terminou
                 self.setStatus(3) # terminado
+                self.finishTime = startTime + q
                 self.GanntInt.append(((startTime + ctx_switch), q))
                 return self.GanntInt # retorna lista de tuplas
             else:
@@ -80,12 +97,22 @@ class Processo:
             self.GanntInt.append(((startTime + ctx_switch), q))
             return False
         
+    def getMetric(self):
+
+        if self.GanntInt.__len__() <= 1:
+            return (self.arrivalTime, self.finishTime)
+        else:
+            return (self.GanntInt[0][0], self.GanntInt[-1][0] + self.GanntInt[-1][1])
 
     def reset_Gannt(self):
         self.GanntInt = []
         return
-        
     
-            
+    def getFinished(self):
+        if self.status == "TERMINADO":
+            return True
+        return False
 
+    #def getQuantum(self):
+        #return q
         

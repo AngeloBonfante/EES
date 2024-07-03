@@ -89,17 +89,18 @@ def EscalonadorPrioridade (task_vector):
 
     return
 
-def EscalonadorRR (task_vector, quantum):
+def EscalonadorRR (task_vector, quantum, dyq):
     ready_vector = task_vector.copy()
     v_n = [] 
-    quantum = quantum
     startTime = 0
     toExec = True
     maxTime = 0
     run = 0
-    
+    metric = []
+    throughput = 0
     i = 0
-    
+    p = 0
+
 
     for t in ready_vector:
         print(t.tempoDeCpu)
@@ -117,21 +118,28 @@ def EscalonadorRR (task_vector, quantum):
         for task in toExecVct:
             if task.getReady():
                 i %= index # diz qual processo esta sendo trabalhado
-                aux = task.exec_rr(quantum, startTime, run) # retorna uma lista de tuplas ou falso
+                aux = task.exec_rr(quantum, startTime, run, dyq) # retorna uma lista de tuplas ou falso
                 run += 1
                 if task.__str__() not in v_n:
                     v_n.append(task.__str__())
-                startTime += quantum
+                    if dyq:
+                        startTime += task.getQuantum()
+                    else:
+                        startTime += quantum
                 if aux != False:
                     InterGannts[i].append(aux)
+                
+                if task.getFinished():
+                    metric.append(task.getMetric())
+                    p += 1
                     
             i += 1
 
         if EndChecker(toExecVct):
             toExec = False
         
-    print("RRG STARTED")
-    RRGrafico(v_n, InterGannts, maxTime)
+    throughput += p / startTime
+    RRGrafico(v_n, InterGannts, maxTime, metric, throughput)
 
    
 

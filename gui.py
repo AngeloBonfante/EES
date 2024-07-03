@@ -10,6 +10,7 @@ from escalonador import EscalonadorFCFS, EscalonadorPrioridade, EscalonadorRR, E
 taskGenVal = 1
 quantum = 20
 instRange = 5
+dyq = False
 
 def get_slider_value(x):
     value = slider.get()
@@ -107,7 +108,7 @@ def runPrio():
 def runRR():
     task_vect = copy.deepcopy(task_vect_imut)
     if task_vect:
-        EscalonadorRR(task_vect, quantum)
+        EscalonadorRR(task_vect, quantum, dyq)
         #messagebox.showinfo("Information", "RR Scheduler Run!")
     else:
         messagebox.showwarning("Warning", "No tasks to schedule!")
@@ -153,7 +154,15 @@ instRange_slider.grid(row=9, column=0, columnspan=2, padx=10, pady=10, sticky="e
 labelInstRange = tk.Label(app, text="Max Insts por Processo: 5", font=("Arial", 10))
 labelInstRange.grid(row=10, column=0, columnspan=2, padx=10, pady=0)
 
+def dynQ():
+    global dyq 
+    if dyq == True:
+        dyq = False
+    else:
+        dyq = True
 
+dynamicQbtn = ttk.Checkbutton(app, text="Quantum Dinamico", command=dynQ)
+dynamicQbtn.grid(row=11, column=0, columnspan=2, padx=10, pady=10, sticky="ew")
 
 
 app.mainloop()

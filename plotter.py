@@ -48,7 +48,7 @@ def GraficoGannt(v_n, gannt, maxTime):
     pp.close()
     return
 
-def RRGrafico(v_n, gannt, maxTime): # https://www.geeksforgeeks.org/python-basic-gantt-chart-using-matplotlib/
+def RRGrafico(v_n, gannt, maxTime, metrics, throughput): # https://www.geeksforgeeks.org/python-basic-gantt-chart-using-matplotlib/
    
     # Declaring a figure "gnt"
     fig, gnt = pp.subplots()
@@ -84,9 +84,17 @@ def RRGrafico(v_n, gannt, maxTime): # https://www.geeksforgeeks.org/python-basic
     for y in range(x):
         if y < len(gannt):
             gnt.broken_barh(gannt[y][0], (10 * (y + 1), 10), facecolors =colors[y])            
-    #pp.savefig('gantt.jpg')
+    
+    a = turnaround(metrics)
+
+    pp.text(2, 2, f"TURNAROUND: {a} ms", fontsize=10)
+    pp.text(2, 5, f"THROUGHPUT: {round(throughput, 2)} Insts", fontsize=10)
+
+
+
+
     pp.savefig('gantt.png')
-    print("Show(rr)")
+    
     pp.show()
     
 
@@ -97,7 +105,18 @@ def r():
 
 
 
+def turnaround(data):
+    avg = []
+    for x in data:
+        start = x[0]
+        end = x[1]
+        turnaround = end - start
+        avg.append(turnaround)
     
+    return sum(avg) / len(avg)
+
+
+
        
     
    
