@@ -122,10 +122,10 @@ def EscalonadorRR (task_vector, quantum, dyq):
                 run += 1
                 if task.__str__() not in v_n:
                     v_n.append(task.__str__())
-                    if dyq:
-                        startTime += task.getQuantum()
-                    else:
-                        startTime += quantum
+                if dyq:
+                    startTime += task.getQuantum()
+                else:
+                    startTime += quantum
                 if aux != False:
                     InterGannts[i].append(aux)
                 

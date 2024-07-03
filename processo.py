@@ -62,7 +62,8 @@ class Processo:
         print("Executando processo ", self.nome)
 
         q = quantum
-        
+        global x
+        x = 0
         ctx_switch = 0
         ctx_switch = ctx_switch + run
         if self.start == False:
@@ -81,7 +82,7 @@ class Processo:
 
             if dyq == True and self.tempoDeCpu <= q:
                 q = self.tempoDeCpu
-
+                x = q
 
             self.tempoDeCpu -= q
             self.instRestantes -= int(q / exec_delay)
@@ -113,6 +114,6 @@ class Processo:
             return True
         return False
 
-    #def getQuantum(self):
-        #return q
+    def getQuantum(self):
+        return x
         
