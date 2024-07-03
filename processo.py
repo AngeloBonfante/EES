@@ -82,7 +82,8 @@ class Processo:
 
             if dyq == True and self.tempoDeCpu <= q:
                 q = self.tempoDeCpu
-                x = q
+
+            x = q
 
             self.tempoDeCpu -= q
             self.instRestantes -= int(q / exec_delay)
