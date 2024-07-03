@@ -127,14 +127,14 @@ def EscalonadorRR (task_vector, quantum, dyq):
                     startTime += task.getQuantum()
                 else:
                     startTime += quantum
-                    
+
                 if aux != False:
                     InterGannts[i].append(aux)
                 
                 if task.getFinished():
                     metric.append(task.getMetric())
                     p += 1
-                    
+                maxTime += quantum
             i += 1
 
         if EndChecker(toExecVct):
