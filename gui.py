@@ -16,6 +16,7 @@ def get_slider_value(x):
     labelVal.config(text=f"Processos: {int(value)}")
     global taskGenVal
     taskGenVal = int(value)
+    btn_change(False)
 
 def get_quantum_value(x):
     value = quantum_slider.get()
@@ -28,6 +29,21 @@ def get_instRange_value(x):
     labelInstRange.config(text=f"Max Insts por Processo: {int(value)}")
     global instRange
     instRange = int(value)
+    btn_change(False)
+
+def btn_change(mode):
+
+    if mode:
+        style.configure("Custom.TButton", background="green", foreground="white", focuscolor='')
+        btn5.config(text=f"Processos Gerados")
+    else:
+        style.configure("Custom.TButton", background="gray", foreground="black", focuscolor='', activeBackground='gray', activeForeground="white", text="Gerar Processos")
+        btn5.config(text=f"Gerar Processos")
+    return
+
+
+
+
 
 
 
@@ -46,13 +62,19 @@ style = ttk.Style(app)
 style.theme_use('clam')
 style.configure('TButton', width=15)
 
+style.map("Custom.TButton",
+          background=[('active', 'green')],
+          foreground=[('active', 'white')])
 
 def getTasks(num_tasks):
     global task_vect_imut
 
     task_vect_imut = TaskGen(num_tasks, instRange)
   
-    messagebox.showinfo("Information", f"{num_tasks} Tasks Generated!")
+    #messagebox.showinfo("Information", f"{num_tasks} Tasks Generated!")
+    
+
+    btn_change(True)
 
 
 def runTaskGen():
@@ -108,11 +130,14 @@ btn4.grid(row=1, column=1, padx=10, pady=10, sticky="w")
 
 
 # Use functools.partial to pass the desired number of tasks to getTasks
-btn5 = ttk.Button(app, text="Gerar Processos", command=runTaskGen)
+btn5 = ttk.Button(app, text="Gerar Processos", command=runTaskGen, style="Custom.TButton")
 btn5.grid(row=4, column=0, padx=10, pady=0,columnspan=2, sticky="ew")
+style.configure("Custom.TButton", background="gray", foreground="white")
+
 
 slider = ttk.Scale(app, from_=1, to=30, orient="horizontal", command=get_slider_value)
 slider.grid(row=5, column=0, columnspan=2, padx=10, pady=10, sticky="ew")
+
 labelVal = tk.Label(app, text="Processos: 1", font=("Arial", 10))
 labelVal.grid(row=6, column=0, columnspan=2, padx=10, pady=0)
 
