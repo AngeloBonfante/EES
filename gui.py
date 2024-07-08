@@ -29,7 +29,7 @@ def get_quantum_value(x):
 
 def get_instRange_value(x):
     value = instRange_slider.get()
-    labelInstRange.config(text=f"Max Insts por Processo: {int(value)}")
+    labelInstRange.config(text=f"Burst Time: {int(value)}")
     global instRange
     instRange = int(value)
     btn_change(False)
@@ -72,8 +72,8 @@ style.map("Custom.TButton",
 def getTasks(num_tasks):
     global task_vect_imut
 
-    #task_vect_imut = TaskGen(num_tasks, instRange)
-    task_vect_imut = getBasic()
+    task_vect_imut = TaskGen(num_tasks, instRange)
+    #task_vect_imut = getBasic()
   
     #messagebox.showinfo("Information", f"{num_tasks} Tasks Generated!")
     
@@ -95,7 +95,7 @@ def runFCFS():
 def runSJF():
     task_vect = task_vect_imut.copy()
     if task_vect:
-        EscalonadorSJF(task_vect, con, preemp)
+        EscalonadorSJF(task_vect)
         #messagebox.showinfo("Information", "SJF Scheduler Run!")
     else:
         messagebox.showwarning("Warning", "No tasks to schedule!")
@@ -132,8 +132,6 @@ btn3.grid(row=1, column=0, padx=10, pady=10, sticky="w")
 btn4 = ttk.Button(app, text="ROUND-ROBIN", command=runRR)
 btn4.grid(row=1, column=1, padx=10, pady=10, sticky="w")
 
-
-# Use functools.partial to pass the desired number of tasks to getTasks
 btn5 = ttk.Button(app, text="Gerar Processos", command=runTaskGen, style="Custom.TButton")
 btn5.grid(row=4, column=0, padx=10, pady=0,columnspan=2, sticky="ew")
 style.configure("Custom.TButton", background="gray", foreground="white")
@@ -152,9 +150,9 @@ labelQuantum = tk.Label(app, text="Quantum: 20", font=("Arial", 10))
 labelQuantum.grid(row=8, column=0, columnspan=2, padx=10, pady=0)
 
 
-instRange_slider = ttk.Scale(app, from_=1, to=50, orient="horizontal", command=get_instRange_value)
+instRange_slider = ttk.Scale(app, from_=1, to=100, orient="horizontal", command=get_instRange_value)
 instRange_slider.grid(row=9, column=0, columnspan=2, padx=10, pady=10, sticky="ew")
-labelInstRange = tk.Label(app, text="Max Insts por Processo: 5", font=("Arial", 10))
+labelInstRange = tk.Label(app, text="Burst Time: 5", font=("Arial", 10))
 labelInstRange.grid(row=10, column=0, columnspan=2, padx=10, pady=0)
 
 def dynQ():
@@ -165,7 +163,7 @@ def dynQ():
         dyq = True
 
 dynamicQbtn = ttk.Checkbutton(app, text="Quantum Dinamico", command=dynQ)
-dynamicQbtn.grid(row=11, column=0, columnspan=2, padx=10, pady=10, sticky="ew")
+dynamicQbtn.grid(row=11, column=0, columnspan=1, padx=10, pady=10, sticky="ew")
 
 def preemptive():
     global preemp
@@ -175,17 +173,9 @@ def preemptive():
         preemp = True
 
 preemptiveSjf = ttk.Checkbutton(app, text="SJF Preemptivo")
-preemptiveSjf.grid(row=12, column=0, columnspan=1, padx=10, pady=10, sticky="ew")
+preemptiveSjf.grid(row=11, column=1, columnspan=1, padx=10, pady=10, sticky="ew")
 
-def concurrence():
-    global con
-    if con == True:
-        con = False
-    else:
-        con = True
 
-concurrentSjf = ttk.Checkbutton(app, text="SJF Concorrente", command=concurrence)
-concurrentSjf.grid(row=12, column=1, columnspan=1, padx=10, pady=10, sticky="ew")
 
 
 app.mainloop()

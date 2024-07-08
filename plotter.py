@@ -18,9 +18,10 @@ def Grafico(vetor_tempo, vetor_nomes, tt):
     
     return
 
-def GraficoGannt(v_n, gannt, maxTime, taskCpuArrival, opt):
+def GraficoGannt(v_n, gannt, taskCpuArrival, opt):
 
 
+    maxTime = gannt[-1][0][-1][0] + gannt[-1][0][-1][1]
    
 
     fig, gnt = pp.subplots()

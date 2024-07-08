@@ -1,4 +1,4 @@
-from processo import Processo
+from task import Task
 import random
 
 def TaskGen(n, rgn):
@@ -10,18 +10,18 @@ def TaskGen(n, rgn):
         nome = f"P{x}"
         inst = random.randint(1, rgn)
         prio = random.randint(1, 6)
-        arr = 0 + x * random.randint(0, 50)
+        arr = 0 + x * random.randint(0, 30)
 
         if x == 0:
             taskVecArrival = [[(0, 0)]]
         else:
             taskVecArrival = [[(arr, 4)]]
 
-        p = Processo(nome, prio, inst, taskVecArrival)
+        p = Task(nome, inst, prio, taskVecArrival)
         tasks.append(p)
 
         #sort tasks by taskVecArrival
-        tasks = sorted(tasks, key=lambda x: x.readyVecArrival[0][0][0])
+        tasks = sorted(tasks, key=lambda x: x.ready_queue_arrival_time[0][0][0])
 
     return tasks
 
@@ -29,28 +29,28 @@ def TaskGen(n, rgn):
 def getBasic():
     tasks = []
     taskVecArrival = [[(0, 4)]]
-    p = Processo("P0", 1, 5, taskVecArrival)
+    p = Task("A", 10, 5, taskVecArrival)
     tasks.append(p)
+
+    taskVecArrival = [[(20, 4)]]
+    p = Task("B", 5, 4, taskVecArrival)
+    tasks.append(p)
+
+    taskVecArrival = [[(25, 4)]]
+    p = Task("C", 19, 2, taskVecArrival)
+    tasks.append(p)
+
+    taskVecArrival = [[(4, 4)]]
+    p = Task("D", 10, 1, taskVecArrival)
+    #tasks.append(p)
 
     taskVecArrival = [[(50, 4)]]
-    p = Processo("P1", 2, 4, taskVecArrival)
-    tasks.append(p)
+    p = Task("E", 10, 4, taskVecArrival)
+    #tasks.append(p)
 
-    taskVecArrival = [[(100, 4)]]
-    p = Processo("P2", 3, 2, taskVecArrival)
-    tasks.append(p)
-
-    taskVecArrival = [[(160, 4)]]
-    p = Processo("P3", 4, 2, taskVecArrival)
-    tasks.append(p)
-
-    taskVecArrival = [[(380, 4)]]
-    p = Processo("P4", 4, 4, taskVecArrival)
-    tasks.append(p)
-
-    taskVecArrival = [[(290, 4)]]
-    p = Processo("P5", 4, 2, taskVecArrival)
-    tasks.append(p)
+    #taskVecArrival = [[(420, 4)]]
+    #p = Task("F", 40, 2, taskVecArrival)
+    #tasks.append(p)
 
     
 
