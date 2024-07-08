@@ -14,6 +14,7 @@ def EscalonadorFCFS (task_vector): #FCFS
     i = 0
     gannt =  [[] for _ in range(id)]
     maxtime = 0
+    readyArrival = [0 for _ in range(id)]
 
     ready_vector = task_vector[:]
     v_n = [] 
@@ -25,26 +26,34 @@ def EscalonadorFCFS (task_vector): #FCFS
         v_t.append(task.getTime())
         startTime += task.getTime()
         gannt[i].append(aux)
+        readyArrival[i] = task.getReadyVecArrival()
         maxtime += task.getTime()
         i += 1
 
 
     #Grafico(v_t, v_n, "FCFS")
-    GraficoGannt(v_n, gannt, maxtime)
+    GraficoGannt(v_n, gannt, maxtime, readyArrival, True)
     return
 
-def EscalonadorSJF (task_vector): #SJF
+def EscalonadorSJF (task_vector, concurrency, preemptive): #SJF
 
     startTime = 0
     id = task_vector.__len__()
     i = 0
     gannt2 =  [[] for _ in range(id)]
     maxtime = 0
+    readyArrival = [0 for _ in range(id)]
 
     ready_vector = task_vector[:]
     v_n = [] 
     v_t = []
-    sorted_vector = Sorter(ready_vector, 0)
+    
+
+    if concurrency:
+        sorted_vector = ConcurrentSorter(ready_vector)
+    else:
+        sorted_vector = Sorter(ready_vector, 0)
+
     for task in sorted_vector:
         task.reset_Gannt()
         aux = task.exec(startTime)
@@ -52,13 +61,19 @@ def EscalonadorSJF (task_vector): #SJF
         v_t.append(task.getTime())
         startTime += task.getTime()
         gannt2[i].append(aux)
+        readyArrival[i] = task.getReadyVecArrival()
         maxtime += task.getTime()
         i += 1
 
     #Grafico(v_t,v_n,"SJF")
-    GraficoGannt(v_n, gannt2, maxtime)
+    GraficoGannt(v_n, gannt2, maxtime, readyArrival, concurrency)
     
     return
+
+
+
+
+
 
 
 def EscalonadorPrioridade (task_vector):
@@ -108,7 +123,7 @@ def EscalonadorRR (task_vector, quantum, dyq):
 
     toExecVct = toExecFilter(ready_vector)
     for task in toExecVct:
-        maxTime += task.tempoDeCpu
+        maxTime += task.tempoDeCpu 
         task.reset_Gannt()
 
     index = toExecVct.__len__() 
@@ -134,7 +149,7 @@ def EscalonadorRR (task_vector, quantum, dyq):
                 if task.getFinished():
                     metric.append(task.getMetric())
                     p += 1
-                maxTime += quantum
+                
             i += 1
 
         if EndChecker(toExecVct):
@@ -161,6 +176,78 @@ def Sorter(t_v, tipo):
         sorted_t_v = sorted(t_v,key=lambda task: task.prioridade)
 
     return sorted_t_v
+
+
+def ConcurrentSorter(tasks):
+
+    if tasks.__len__() == 0:
+        return
+    
+    sortedTasks = []
+    temp = []
+
+    # copy tasks to deepcopy list
+    auxTasks = tasks.copy()
+
+    for task in auxTasks:
+
+        if auxTasks.__len__() == 0:
+            return 
+
+        cputime = task.getTime()
+        len = auxTasks.__len__()
+        markedForRemoval = []
+        name = task.__str__() 
+        normalizationArrivalTime = auxTasks[0].getVecArrivalTime()
+
+        for i in range(len):
+            if auxTasks[i].getVecArrivalTime() <= cputime + normalizationArrivalTime:
+                temp.append(auxTasks[i])
+                markedForRemoval.append(auxTasks[i])
+        
+        for i in markedForRemoval:
+            auxTasks.remove(i)
+
+        temp = sorted(temp, key=lambda task: task.getTime()) 
+        # remove from temp task with name
+        for i in temp:
+            if i.__str__() == name:
+                temp.remove(i)
+        
+        sortedTasks.append(tasks[0])
+        sortedTasks.extend(temp)
+        
+        #sortedTasks.extend(ConcurrentSorter(auxTasks))
+        auxTasks = sorted(auxTasks, key=lambda task: task.getVecArrivalTime())
+        if auxTasks.__len__() != 0:
+            rtn = ConcurrentSorter(auxTasks)
+            sortedTasks.extend(rtn)
+
+        break
+        
+
+
+
+    #sortedTasks = sorted(temp, key=lambda task: task.getTime()) # sort by time
+    #sortedTasks.append(ConcurrentSorter(auxTasks))
+    
+
+    return sortedTasks
+        
+   
+
+    
+
+            
+
+
+   
+   
+            
+        
+
+
+
 
 def toExecFilter(V): 
     Vector = []

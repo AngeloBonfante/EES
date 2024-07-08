@@ -4,13 +4,15 @@ from tkinter import ttk
 from functools import partial  # Import functools.partial
 import copy
 
-from taskgen import TaskGen
+from taskgen import TaskGen, getBasic
 from escalonador import EscalonadorFCFS, EscalonadorPrioridade, EscalonadorRR, EscalonadorSJF
 
 taskGenVal = 1
 quantum = 20
 instRange = 5
 dyq = False
+con = False
+preemp = False
 
 def get_slider_value(x):
     value = slider.get()
@@ -70,7 +72,8 @@ style.map("Custom.TButton",
 def getTasks(num_tasks):
     global task_vect_imut
 
-    task_vect_imut = TaskGen(num_tasks, instRange)
+    #task_vect_imut = TaskGen(num_tasks, instRange)
+    task_vect_imut = getBasic()
   
     #messagebox.showinfo("Information", f"{num_tasks} Tasks Generated!")
     
@@ -92,7 +95,7 @@ def runFCFS():
 def runSJF():
     task_vect = task_vect_imut.copy()
     if task_vect:
-        EscalonadorSJF(task_vect)
+        EscalonadorSJF(task_vect, con, preemp)
         #messagebox.showinfo("Information", "SJF Scheduler Run!")
     else:
         messagebox.showwarning("Warning", "No tasks to schedule!")
@@ -163,6 +166,26 @@ def dynQ():
 
 dynamicQbtn = ttk.Checkbutton(app, text="Quantum Dinamico", command=dynQ)
 dynamicQbtn.grid(row=11, column=0, columnspan=2, padx=10, pady=10, sticky="ew")
+
+def preemptive():
+    global preemp
+    if preemp == True:
+        preemp = False
+    else:
+        preemp = True
+
+preemptiveSjf = ttk.Checkbutton(app, text="SJF Preemptivo")
+preemptiveSjf.grid(row=12, column=0, columnspan=1, padx=10, pady=10, sticky="ew")
+
+def concurrence():
+    global con
+    if con == True:
+        con = False
+    else:
+        con = True
+
+concurrentSjf = ttk.Checkbutton(app, text="SJF Concorrente", command=concurrence)
+concurrentSjf.grid(row=12, column=1, columnspan=1, padx=10, pady=10, sticky="ew")
 
 
 app.mainloop()

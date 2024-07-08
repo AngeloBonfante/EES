@@ -10,7 +10,7 @@ def delayer(ed):
     
 
 class Processo:
-    def __init__(self, nome, prioridade, instRestantes):
+    def __init__(self, nome, prioridade, instRestantes, readyVecArrival):
         self.status = "PRONTO"
         self.nome = nome
         self.prioridade = prioridade
@@ -19,6 +19,7 @@ class Processo:
         self.GanntInt = []
         self.arrivalTime = 0
         self.finishTime = 0
+        self.readyVecArrival = readyVecArrival
         self.start = False
     
     def exec(self, startTime):
@@ -117,4 +118,10 @@ class Processo:
 
     def getQuantum(self):
         return x
+    
+    def getReadyVecArrival(self):
+        return self.readyVecArrival
+    
+    def getVecArrivalTime(self):
+        return self.readyVecArrival[0][0][0]
         
