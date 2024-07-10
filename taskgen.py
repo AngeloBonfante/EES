@@ -1,6 +1,8 @@
 from task import Task
 import random
 
+# Gerador de tarefas
+
 def TaskGen(n, rgn, rgn_arrival):
 
     tasks = []
@@ -24,6 +26,8 @@ def TaskGen(n, rgn, rgn_arrival):
 
     return tasks
 
+
+# Tarefas básicas para teste
 
 def getBasic():
     tasks = []

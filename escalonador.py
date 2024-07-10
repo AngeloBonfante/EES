@@ -23,17 +23,19 @@ def EscalonadorFCFS (tasks):
     burst_times = []
 
     for task in queue:
+        # limpa o grafico de gannt para reuso
         task.resetIntervals()
-
+        # "executa" o processo e recebe metricas para o grafico
         interval = task.run(start_time)
         intervals.append([interval[0]])
         start_time_adjustment = interval[1]
-
+        # tratamento para o grafico
         pIDs.append(task.pID)
         burst_times.append(task.cpu_burst_time)
 
         ready_queue_arrival_times.append([(task.ready_queue_arrival_time, 4)])
 
+        # encontrar quando o proximo processo vai executar
         if (start_time_adjustment):
             start_time = task.ready_queue_arrival_time[0][0][0]
         start_time += task.cpu_burst_time
@@ -51,6 +53,8 @@ def EscalonadorFCFS (tasks):
     
     
         
+
+    # recebe uma lista em ordem de chega e devolve uma lista na ordem sjf com tempo de chegada em consideração
 def SJF_Sorter(queue):
     sorted_queue = []
     remaining = []
@@ -88,7 +92,6 @@ def EscalonadorSJF(tasks):
 
     sjf_queue = SJF_Sorter(queue)
     
-    ################################ EXECUÇÃO ################################
     for task in sjf_queue:
         task.resetIntervals()
         interval = task.run(start_time)
@@ -116,6 +119,7 @@ def EscalonadorSJF(tasks):
     return (averageTurnAround, throughput)
 
 
+# tanto o sorter e escalonador de SJF E PRIORIDADE são extremamente similares pois a unica diferença é qual variável decide a ordem
 
 def Prio_Sorter(queue):
     sorted_queue = []
@@ -157,8 +161,7 @@ def EscalonadorPrioridade(tasks):
     prio_queue = []
 
     prio_queue = Prio_Sorter(queue)
-    
-    ################################ EXECUÇÃO ################################
+
     for task in prio_queue:
         task.resetIntervals()
         interval = task.run(start_time)
@@ -203,7 +206,7 @@ def EscalonadorRR(tasks, quantum_size, dynamic_quantum):
     turnarounds = []
 
 
-    #reset gannt loop 
+    #reset loop 
     for task in queue:
         task.resetIntervals()
 

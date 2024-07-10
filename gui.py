@@ -63,8 +63,7 @@ def btn_change(mode):
 
 app = tk.Tk()
 app.title("Escalonador")
-#app.geometry("280x265")  # Set the window size (optional)
-app.resizable(False, False)  # Disable window resizing
+app.resizable(False, False) 
 
 
 # Global task vector
@@ -82,13 +81,7 @@ style.map("Custom.TButton",
 
 def getTasks(num_tasks):
     global task_vect_imut
-
     task_vect_imut = TaskGen(num_tasks, instRange, rgn_arrival)
-    #task_vect_imut = getBasic()
-  
-    #messagebox.showinfo("Information", f"{num_tasks} Tasks Generated!")
-    
-
     btn_change(True)
 
 
@@ -235,9 +228,6 @@ def EntryInserter(throughput, AverageTurnaround):
     entryT.insert(0, f"Turnaround Médio: {int(AverageTurnaround)} ms")
     entryV.insert(0, f"Throughput: {round(throughput, 2)} ms/instrução")
     activatorEntry(False)
-
-
-
 
 
 #app.mainloop()
