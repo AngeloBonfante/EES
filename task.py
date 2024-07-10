@@ -22,6 +22,7 @@ class Task:
     #start_time é o quando o processo começa a ser executado
     def run(self, start_time):
         aux = False
+        self.exec_start_time = start_time
         if start_time < self.ready_queue_arrival_time[0][0][0]:
             self.time_intervals.append((self.ready_queue_arrival_time[0][0][0], self.cpu_burst_time))
             aux = True
@@ -104,6 +105,9 @@ class Task:
     def resetIntervals(self):
         self.time_intervals = []
         return
+    
+    def getStartEnd(self):
+        return (self.exec_start_time, self.exec_end_time)
         
 
 

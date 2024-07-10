@@ -98,8 +98,8 @@ def RRGrafico(v_n, gannt, maxTime, metrics, throughput): # https://www.geeksforg
     
     a = turnaround(metrics)
 
-    pp.text(2, 2, f"TURNAROUND: {a} ms", fontsize=10)
-    pp.text(2, 4, f"THROUGHPUT: {round(throughput, 2)} Insts", fontsize=10)
+    #pp.text(2, 2, f"TURNAROUND: {a} ms", fontsize=10)
+    #pp.text(2, 4, f"THROUGHPUT: {round(throughput, 2)} Insts", fontsize=10)
 
     print(maxTim)
     print(gannt[-1][0][-1][0] + gannt[-1][0][-1][1])

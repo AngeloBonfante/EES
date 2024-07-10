@@ -1,16 +1,15 @@
 from task import Task
 import random
 
-def TaskGen(n, rgn):
+def TaskGen(n, rgn, rgn_arrival):
 
     tasks = []
     
-
     for x in range(n):
         nome = f"P{x}"
         inst = random.randint(1, rgn)
         prio = random.randint(1, 6)
-        arr = 0 + x * random.randint(0, 30)
+        arr = 0 + x * random.randint(0, rgn_arrival)
 
         if x == 0:
             taskVecArrival = [[(0, 0)]]
@@ -32,17 +31,17 @@ def getBasic():
     p = Task("A", 10, 5, taskVecArrival)
     tasks.append(p)
 
-    taskVecArrival = [[(20, 4)]]
+    taskVecArrival = [[(5, 4)]]
     p = Task("B", 5, 4, taskVecArrival)
     tasks.append(p)
 
-    taskVecArrival = [[(25, 4)]]
+    taskVecArrival = [[(6, 4)]]
     p = Task("C", 19, 2, taskVecArrival)
     tasks.append(p)
 
     taskVecArrival = [[(4, 4)]]
-    p = Task("D", 10, 1, taskVecArrival)
-    #tasks.append(p)
+    p = Task("D", 2, 1, taskVecArrival)
+    tasks.append(p)
 
     taskVecArrival = [[(50, 4)]]
     p = Task("E", 10, 4, taskVecArrival)

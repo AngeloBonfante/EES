@@ -1,18 +1,22 @@
 import tkinter as tk
 from tkinter import messagebox
 from tkinter import ttk
-from functools import partial  # Import functools.partial
+from functools import partial  
 import copy
 
 from taskgen import TaskGen, getBasic
 from escalonador import EscalonadorFCFS, EscalonadorPrioridade, EscalonadorRR, EscalonadorSJF
 
 taskGenVal = 1
-quantum = 20
-instRange = 5
+quantum = 10
+instRange = 30
+rgn_arrival = 0
 dyq = False
 con = False
 preemp = False
+
+throughput = 0
+AverageTurnaround = 0
 
 def get_slider_value(x):
     value = slider.get()
@@ -29,9 +33,16 @@ def get_quantum_value(x):
 
 def get_instRange_value(x):
     value = instRange_slider.get()
-    labelInstRange.config(text=f"Burst Time: {int(value)}")
+    labelInstRange.config(text=f"Burst Time Máximo: {int(value)}")
     global instRange
     instRange = int(value)
+    btn_change(False)
+
+def get_arrivalRange_value(x):
+    value = arrivalRange_slider.get()
+    labelArrivalRange.config(text=f"Tempo de Chegada Máximo: {int(value)}")
+    global rgn_arrival
+    rgn_arrival = int(value)
     btn_change(False)
 
 def btn_change(mode):
@@ -59,6 +70,7 @@ app.resizable(False, False)  # Disable window resizing
 
 # Global task vector
 task_vect_imut = []
+#task_vect_imut = getBasic()
 
 
 style = ttk.Style(app)
@@ -72,7 +84,7 @@ style.map("Custom.TButton",
 def getTasks(num_tasks):
     global task_vect_imut
 
-    task_vect_imut = TaskGen(num_tasks, instRange)
+    task_vect_imut = TaskGen(num_tasks, instRange, rgn_arrival)
     #task_vect_imut = getBasic()
   
     #messagebox.showinfo("Information", f"{num_tasks} Tasks Generated!")
@@ -87,7 +99,12 @@ def runTaskGen():
 def runFCFS():
     task_vect = copy.deepcopy(task_vect_imut)
     if task_vect:
-        EscalonadorFCFS(task_vect)
+        aux = EscalonadorFCFS(task_vect)
+        global AverageTurnaround 
+        global throughput
+        AverageTurnaround = aux[0]
+        throughput = aux[1]
+        EntryInserter(throughput, AverageTurnaround)
         #messagebox.showinfo("Information", "FCFS Scheduler Run!")
     else:
         messagebox.showwarning("Warning", "No tasks to schedule!")
@@ -95,7 +112,12 @@ def runFCFS():
 def runSJF():
     task_vect = task_vect_imut.copy()
     if task_vect:
-        EscalonadorSJF(task_vect)
+        aux = EscalonadorSJF(task_vect)
+        global AverageTurnaround 
+        global throughput
+        AverageTurnaround = aux[0]
+        throughput = aux[1]
+        EntryInserter(throughput, AverageTurnaround)
         #messagebox.showinfo("Information", "SJF Scheduler Run!")
     else:
         messagebox.showwarning("Warning", "No tasks to schedule!")
@@ -103,7 +125,12 @@ def runSJF():
 def runPrio():
     task_vect = copy.deepcopy(task_vect_imut)
     if task_vect:
-        EscalonadorPrioridade(task_vect)
+        aux = EscalonadorPrioridade(task_vect)
+        global AverageTurnaround 
+        global throughput
+        AverageTurnaround = aux[0]
+        throughput = aux[1]
+        EntryInserter(throughput, AverageTurnaround)
         #messagebox.showinfo("Information", "Priority Scheduler Run!")
     else:
         messagebox.showwarning("Warning", "No tasks to schedule!")
@@ -111,7 +138,12 @@ def runPrio():
 def runRR():
     task_vect = copy.deepcopy(task_vect_imut)
     if task_vect:
-        EscalonadorRR(task_vect, quantum, dyq)
+        aux = EscalonadorRR(task_vect, quantum, dyq)
+        global AverageTurnaround 
+        global throughput
+        AverageTurnaround = aux[0]
+        throughput = aux[1]
+        EntryInserter(throughput, AverageTurnaround)
         #messagebox.showinfo("Information", "RR Scheduler Run!")
     else:
         messagebox.showwarning("Warning", "No tasks to schedule!")
@@ -146,14 +178,19 @@ labelVal.grid(row=6, column=0, columnspan=2, padx=10, pady=0)
 
 quantum_slider = ttk.Scale(app, from_=1, to=100, orient="horizontal", command=get_quantum_value)
 quantum_slider.grid(row=7, column=0, columnspan=2, padx=10, pady=10, sticky="ew")
-labelQuantum = tk.Label(app, text="Quantum: 20", font=("Arial", 10))
+labelQuantum = tk.Label(app, text="Quantum: 10", font=("Arial", 10))
 labelQuantum.grid(row=8, column=0, columnspan=2, padx=10, pady=0)
 
 
 instRange_slider = ttk.Scale(app, from_=1, to=100, orient="horizontal", command=get_instRange_value)
 instRange_slider.grid(row=9, column=0, columnspan=2, padx=10, pady=10, sticky="ew")
-labelInstRange = tk.Label(app, text="Burst Time: 5", font=("Arial", 10))
+labelInstRange = tk.Label(app, text="Burst Time Máximo: 30", font=("Arial", 10))
 labelInstRange.grid(row=10, column=0, columnspan=2, padx=10, pady=0)
+
+arrivalRange_slider = ttk.Scale(app, from_=0, to=100, orient="horizontal", command=get_arrivalRange_value)
+arrivalRange_slider.grid(row=11, column=0, columnspan=2, padx=10, pady=10, sticky="ew")
+labelArrivalRange = tk.Label(app, text="Tempo de Chegada Máximo: 0", font=("Arial", 10))
+labelArrivalRange.grid(row=12, column=0, columnspan=2, padx=10, pady=0)
 
 def dynQ():
     global dyq 
@@ -163,7 +200,7 @@ def dynQ():
         dyq = True
 
 dynamicQbtn = ttk.Checkbutton(app, text="Quantum Dinamico", command=dynQ)
-dynamicQbtn.grid(row=11, column=0, columnspan=1, padx=10, pady=10, sticky="ew")
+dynamicQbtn.grid(row=13, column=0, columnspan=2, padx=10, pady=10, sticky="ew")
 
 def preemptive():
     global preemp
@@ -172,12 +209,38 @@ def preemptive():
     else:
         preemp = True
 
-preemptiveSjf = ttk.Checkbutton(app, text="SJF Preemptivo")
-preemptiveSjf.grid(row=11, column=1, columnspan=1, padx=10, pady=10, sticky="ew")
+
+entryT = tk.Entry(app, width=20)
+entryT.grid(row=14, column=0, columnspan=2, padx=10, pady=10, sticky="ew")
+entryT.insert(0, "Default Value")
+entryT.config(state='disabled')
+
+entryV = tk.Entry(app, width=20)
+entryV.grid(row=15, column=0, columnspan=2, padx=10, pady=10, sticky="ew")
+entryV.insert(0, "Default Value")
+entryV.config(state='disabled')
+
+
+def activatorEntry(mode):
+    if mode:
+        entryT.config(state='normal')
+        entryV.config(state='normal')
+    else:
+        entryT.config(state='disabled')
+        entryV.config(state='disabled')
+
+def EntryInserter(throughput, AverageTurnaround):
+    activatorEntry(True)
+    entryT.delete(0, tk.END)
+    entryV.delete(0, tk.END)
+    entryT.insert(0, f"Turnaround Médio: {int(AverageTurnaround)} ms")
+    entryV.insert(0, f"Throughput: {round(throughput, 2)} ms/instrução")
+    activatorEntry(False)
 
 
 
 
-app.mainloop()
+
+#app.mainloop()
 
 

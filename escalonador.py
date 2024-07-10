@@ -16,6 +16,9 @@ def EscalonadorFCFS (tasks):
     aux = 0
     intervals = []
     ready_queue_arrival_times = []
+    throughput = 0
+    lenTasks = len(queue)
+    turnarounds = []
 
     pIDs = []
     burst_times = []
@@ -33,10 +36,21 @@ def EscalonadorFCFS (tasks):
         ready_queue_arrival_times.append([(task.ready_queue_arrival_time, 4)])
 
         if (start_time_adjustment):
-            start_time += task.ready_queue_arrival_time[0][0][0]
+            start_time = task.ready_queue_arrival_time[0][0][0]
         start_time += task.cpu_burst_time
 
+        turnarounds.append(start_time - task.ready_queue_arrival_time[0][0][0]) 
+
     GraficoGannt(pIDs, intervals, ready_queue_arrival_times, False)
+
+    averageTurnAround = sum(turnarounds) / len(turnarounds)
+
+    # nesse momento start_time é o tempo total de execução
+    throughput = start_time / lenTasks # ms por instrução
+    
+    return (averageTurnAround, throughput)
+    
+    
         
 def SJF_Sorter(queue):
     sorted_queue = []
@@ -66,6 +80,9 @@ def EscalonadorSJF(tasks):
     aux = 0
     intervals = []
     ready_queue_arrival_times = []
+    throughput = 0
+    lenTasks = len(queue)
+    turnarounds = []
 
     pIDs = []
     sjf_queue = []
@@ -84,15 +101,21 @@ def EscalonadorSJF(tasks):
         ready_queue_arrival_times.append([(task.ready_queue_arrival_time, 4)])
 
         if (start_time_adjustment):
-            start_time = 0
-            start_time += task.ready_queue_arrival_time[0][0][0] + task.cpu_burst_time
+            start_time = task.ready_queue_arrival_time[0][0][0] + task.cpu_burst_time
         else:
             start_time += task.cpu_burst_time
 
+        turnarounds.append(start_time - task.ready_queue_arrival_time[0][0][0]) 
+
     GraficoGannt(pIDs, intervals, ready_queue_arrival_times, False)
 
+    averageTurnAround = sum(turnarounds) / len(turnarounds)
 
-    return
+    # nesse momento start_time é o tempo total de execução
+    throughput = start_time / lenTasks # ms por instrução
+    
+    return (averageTurnAround, throughput)
+
 
 
 def Prio_Sorter(queue):
@@ -127,6 +150,9 @@ def EscalonadorPrioridade(tasks):
     aux = 0
     intervals = []
     ready_queue_arrival_times = []
+    throughput = 0
+    lenTasks = len(queue)
+    turnarounds = []
 
     pIDs = []
     prio_queue = []
@@ -145,15 +171,21 @@ def EscalonadorPrioridade(tasks):
         ready_queue_arrival_times.append([(task.ready_queue_arrival_time, 4)])
 
         if (start_time_adjustment):
-            start_time = 0
-            start_time += task.ready_queue_arrival_time[0][0][0] + task.cpu_burst_time
+            start_time = task.ready_queue_arrival_time[0][0][0] + task.cpu_burst_time
         else:
             start_time += task.cpu_burst_time
 
+        turnarounds.append(start_time - task.ready_queue_arrival_time[0][0][0]) 
     GraficoGannt(pIDs, intervals, ready_queue_arrival_times, False)
 
 
-    return
+    averageTurnAround = sum(turnarounds) / len(turnarounds)
+
+    # nesse momento start_time é o tempo total de execução
+    throughput = start_time / lenTasks # ms por instrução
+    
+    return (averageTurnAround, throughput)
+
 
 def EscalonadorRR(tasks, quantum_size, dynamic_quantum):
 
@@ -164,9 +196,12 @@ def EscalonadorRR(tasks, quantum_size, dynamic_quantum):
     to_exec = True
     run = 0
     metric = []
-    throughput = 0
     i = 0
     p = 0
+
+    throughput = 0
+    lenTasks = len(queue)
+    turnarounds = []
 
 
     #reset gannt loop 
@@ -208,12 +243,20 @@ def EscalonadorRR(tasks, quantum_size, dynamic_quantum):
         if EndChecker(queue):
             to_exec = False
 
-    throughput += p / start_time
+   
 
-    RRGrafico(pIDs, intervals, 1000, metric, throughput)
+    RRGrafico(pIDs, intervals, 1000, metric, 0)
 
+    for task in queue:
+        aux = task.getStartEnd()
+        turnarounds.append(aux[1] - aux[0])
+        
+    averageTurnAround = sum(turnarounds) / len(turnarounds)
 
-    return
+    # nesse momento start_time é o tempo total de execução
+    throughput = start_time / lenTasks # ms por instrução
+
+    return (throughput,averageTurnAround )
 
 
 def EndChecker(V): 
