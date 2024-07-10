@@ -1,7 +1,6 @@
 import tkinter as tk
 from tkinter import messagebox
 from tkinter import ttk
-from functools import partial  
 import copy
 
 from taskgen import TaskGen, getBasic

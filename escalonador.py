@@ -1,4 +1,3 @@
-import task
 from plotter import GraficoGannt, RRGrafico
 
 # ESCALONADORES RECEBEM UMA LISTA DE PROCESSOS, NAO CONFUNDIR COM A LISTA DE PRONTOS

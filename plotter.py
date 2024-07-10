@@ -1,6 +1,5 @@
 import matplotlib.pyplot as pp
 import numpy as np
-import time
 
 
 
