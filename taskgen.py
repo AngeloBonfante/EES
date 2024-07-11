@@ -6,7 +6,7 @@ import random
 def TaskGen(n, rgn, rgn_arrival):
 
     tasks = []
-    
+    print(f"Gerando {n} tarefas\n\n")
     for x in range(n):
         nome = f"P{x}"
         inst = random.randint(1, rgn)
