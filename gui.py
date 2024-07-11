@@ -204,12 +204,12 @@ def preemptive():
 
 entryT = tk.Entry(app, width=20)
 entryT.grid(row=14, column=0, columnspan=2, padx=10, pady=10, sticky="ew")
-entryT.insert(0, "Default Value")
+entryT.insert(0, "Turnaround Médio: 0 ms")
 entryT.config(state='disabled')
 
 entryV = tk.Entry(app, width=20)
 entryV.grid(row=15, column=0, columnspan=2, padx=10, pady=10, sticky="ew")
-entryV.insert(0, "Default Value")
+entryV.insert(0, "Throughput: 0 ms/instrução")
 entryV.config(state='disabled')
 
 

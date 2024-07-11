@@ -24,6 +24,9 @@ def TaskGen(n, rgn, rgn_arrival):
         #sort tasks by taskVecArrival
         tasks = sorted(tasks, key=lambda x: x.ready_queue_arrival_time[0][0][0])
 
+    for task in tasks:
+        print(f"{task.pID} burst: {task.cpu_burst_time}ms prioridade:{task.priority} chegada:{task.ready_queue_arrival_time[0][0][0]} ms")
+
     return tasks
 
 
