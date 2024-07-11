@@ -1,8 +1,9 @@
 import matplotlib.pyplot as pp
+import matplotlib
 import numpy as np
 
 
-
+matplotlib.use('TkAgg')
 
 
 def Grafico(vetor_tempo, vetor_nomes, tt):
