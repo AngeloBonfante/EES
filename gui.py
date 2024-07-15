@@ -209,7 +209,7 @@ entryT.config(state='disabled')
 
 entryV = tk.Entry(app, width=20)
 entryV.grid(row=15, column=0, columnspan=2, padx=10, pady=10, sticky="ew")
-entryV.insert(0, "Throughput: 0 ms/instrução")
+entryV.insert(0, "Throughput: 0 ms/processo")
 entryV.config(state='disabled')
 
 
@@ -226,7 +226,7 @@ def EntryInserter(throughput, AverageTurnaround):
     entryT.delete(0, tk.END)
     entryV.delete(0, tk.END)
     entryT.insert(0, f"Turnaround Médio: {int(AverageTurnaround)} ms")
-    entryV.insert(0, f"Throughput: {round(throughput, 2)} ms/instrução")
+    entryV.insert(0, f"Throughput: {round(throughput, 2)} ms/processo")
     activatorEntry(False)
 
 

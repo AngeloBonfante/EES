@@ -258,7 +258,7 @@ def EscalonadorRR(tasks, quantum_size, dynamic_quantum):
     # nesse momento start_time é o tempo total de execução
     throughput = start_time / lenTasks # ms por instrução
 
-    return (throughput,averageTurnAround )
+    return (averageTurnAround, throughput )
 
 
 def EndChecker(V): 
